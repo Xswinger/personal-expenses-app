@@ -1,0 +1,25 @@
+<div class="container">
+  <h2>Учет личных расходов</h2>
+  <p class="subtitle">Расходы пользователей за последний месяц</p>
+
+  <table class="users-table">
+    <thead>
+      <tr>
+        <th>Пользователь</th>
+        <th>Сумма расходов</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of summary">
+        <td>{{ user.username }}</td>
+        <td>{{ user.total_expenses_last_month | currency:'RUB':'symbol' }}</td>
+      </tr>
+
+      <tr *ngIf="users.length === 0">
+        <td colspan="2" class="empty">
+          Нет данных для отображения
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
