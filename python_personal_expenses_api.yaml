@@ -1,0 +1,480 @@
+openapi: 3.0.3
+info:
+  title: Personal Expenses API
+  description: API для приложения учета личных расходов пользователей
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000/api
+    description: Local development server
+
+tags:
+  - name: Auth
+  - name: Users
+  - name: Expenses
+  - name: Statistics
+  - name: Dashboard
+
+paths:
+
+  /auth/register/:
+    post:
+      tags: [Auth]
+      summary: Регистрация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: Пользователь зарегистрирован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Пользователь с таким email уже существует
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  /auth/login/:
+    post:
+      tags: [Auth]
+      summary: Аутентификация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: JWT токены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtToken'
+
+  /users/:
+    get:
+      tags: [Users]
+      summary: Получить список пользователей
+      responses:
+        '200':
+          description: Список пользователей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+    post:
+      tags: [Users]
+      summary: Создать пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: Пользователь создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{id}/:
+    get:
+      tags: [Users]
+      summary: Получить пользователя по id
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Пользователь
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    put:
+      tags: [Users]
+      summary: Обновить пользователя
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Пользователь обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    delete:
+      tags: [Users]
+      summary: Удалить пользователя
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '204':
+          description: Пользователь удален
+          content: {}
+
+  /expenses/:
+    get:
+      tags: [Expenses]
+      summary: Получить список расходов
+      parameters:
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: category
+          in: query
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ExpenseCategory'
+      responses:
+        '200':
+          description: Список расходов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Expense'
+        '401':
+          description: Пользователь не аутентифицирован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Нет доступа к расходам другого пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+    post:
+      tags: [Expenses]
+      summary: Добавить расход
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseCreate'
+      responses:
+        '201':
+          description: Расход создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+
+  /expenses/{id}/:
+    get:
+      tags: [Expenses]
+      summary: Получить расход
+      parameters:
+        - $ref: '#/components/parameters/ExpenseId'
+      responses:
+        '200':
+          description: Расход
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+
+    put:
+      tags: [Expenses]
+      summary: Обновить расход
+      parameters:
+        - $ref: '#/components/parameters/ExpenseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseCreate'
+      responses:
+        '200':
+          description: Расход обновлён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '400':
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Неавторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Попытка изменить чужой расход
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Расход не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+    delete:
+      tags: [Expenses]
+      summary: Удалить расход
+      parameters:
+        - $ref: '#/components/parameters/ExpenseId'
+      responses:
+        '204':
+          description: Расход удален
+          content: {}
+
+  /statistics/monthly/:
+    get:
+      tags: [Statistics]
+      summary: Общая сумма расходов за месяц
+      parameters:
+        - name: month
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "2025-01"
+      responses:
+        '200':
+          description: Статистика за месяц
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonthlyStatistics'
+
+  /dashboard/:
+    get:
+      tags: [Dashboard]
+      summary: Пользователи и их расходы за последний месяц
+      responses:
+        '200':
+          description: Данные для главной страницы
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserMonthlySummary'
+        '401':
+          description: Неавторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Доступ разрешён только администраторам
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+components:
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    UserId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+    ExpenseId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  schemas:
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+
+    UserCreate:
+      type: object
+      required: [username, email, password]
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    UserUpdate:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+
+    Login:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    JwtToken:
+      type: object
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+
+    Expense:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        category:
+          $ref: '#/components/schemas/ExpenseCategory'
+        amount:
+          type: number
+          format: float
+        date:
+          type: string
+          format: date
+        comment:
+          type: string
+        payment_method:
+          $ref: '#/components/schemas/PaymentMethod'
+
+    ExpenseCreate:
+      type: object
+      required: [category, amount, date, payment_method]
+      properties:
+        category:
+          $ref: '#/components/schemas/ExpenseCategory'
+        amount:
+          type: number
+          format: float
+        date:
+          type: string
+          format: date
+        comment:
+          type: string
+        payment_method:
+          $ref: '#/components/schemas/PaymentMethod'
+
+    ExpenseCategory:
+      type: string
+      enum:
+        - food
+        - transport
+        - subscriptions
+        - entertainment
+        - other
+
+    PaymentMethod:
+      type: string
+      enum:
+        - cash
+        - card
+        - other
+
+    MonthlyStatistics:
+      type: object
+      properties:
+        month:
+          type: string
+        total_amount:
+          type: number
+          format: float
+
+    UserMonthlySummary:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        username:
+          type: string
+        total_expenses_last_month:
+          type: number
+          format: float
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          example: permission_denied
+        message:
+          type: string
+          example: You do not have permission to perform this action.
+        details:
+          type: object
+          additionalProperties: true
+
+
+security:
+  - BearerAuth: []
