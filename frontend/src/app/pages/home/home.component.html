@@ -1,0 +1,73 @@
+<app-nav></app-nav>
+<div class="container">
+  <h2>Мои расходы</h2>
+
+  <!-- Фильтры -->
+  <section class="filters">
+    <label>
+      С:
+      <input type="date" [(ngModel)]="filters.fromDate">
+    </label>
+
+    <label>
+      По:
+      <input type="date" [(ngModel)]="filters.toDate">
+    </label>
+
+    <label>
+      Категория:
+      <select [(ngModel)]="filters.category">
+        <option value="">Все</option>
+        <option *ngFor="let c of categories" [value]="c">
+          {{ c }}
+        </option>
+      </select>
+    </label>
+
+    <button (click)="applyFilters()">Применить</button>
+    <button (click)="resetFilters()">Сбросить</button>
+  </section>
+
+  <!-- Статистика -->
+  <section class="stats">
+    <strong>Сумма за период:</strong>
+    {{ totalAmount | currency:'RUB':'symbol' }}
+  </section>
+
+  <!-- Кнопка добавления -->
+  <button class="add-btn" (click)="addExpense()">
+    + Добавить расход
+  </button>
+
+  <!-- Список расходов -->
+  <table class="expenses-table">
+    <thead>
+      <tr>
+        <th>Дата</th>
+        <th>Категория</th>
+        <th>Сумма</th>
+        <th>Комментарий</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let expense of expenses">
+        <td>{{ expense.date | date:'dd.MM.yyyy' }}</td>
+        <td>{{ expense.category }}</td>
+        <td>{{ expense.amount | currency:'RUB':'symbol' }}</td>
+        <td>{{ expense.comment }}</td>
+        <td class="actions">
+          <button (click)="editExpense(expense)">✏️</button>
+          <button (click)="deleteExpense(expense.id)">🗑</button>
+        </td>
+      </tr>
+
+      <tr *ngIf="expenses.length === 0">
+        <td colspan="5" class="empty">
+          Расходы не найдены
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

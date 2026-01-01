@@ -1,0 +1,37 @@
+.container {
+  max-width: 900px;
+  margin: 30px auto;
+}
+
+.filters,
+.stats {
+  margin-bottom: 20px;
+}
+
+.filters label {
+  margin-right: 15px;
+}
+
+.add-btn {
+  margin-bottom: 15px;
+}
+
+.expenses-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.expenses-table th,
+.expenses-table td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.actions button {
+  margin-right: 5px;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+}

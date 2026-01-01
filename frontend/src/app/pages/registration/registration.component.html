@@ -1,0 +1,45 @@
+<app-nav></app-nav>
+
+<div class="container">
+  <h2>Регистрация пользователя</h2>
+
+  <form class="register-form" (ngSubmit)="register()">
+
+    <label>
+      Имя
+      <input
+        type="text"
+        name="name"
+        [(ngModel)]="user.name"
+        required
+      />
+    </label>
+
+    <label>
+      Email
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="user.email"
+        required
+      />
+    </label>
+
+    <label>
+      Пароль
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="user.password"
+        required
+      />
+    </label>
+
+    <div class="actions">
+      <button type="submit">
+        Зарегистрироваться
+      </button>
+    </div>
+
+  </form>
+</div>

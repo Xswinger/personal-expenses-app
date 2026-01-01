@@ -1,9 +1,7 @@
-import { Category } from "./Category";
-import { PaymentMethod } from "./PaymentMethod";
+import { Category } from "../Category";
+import { PaymentMethod } from "../PaymentMethod";
 
-export class Expense {
-    private id: number;
-    private user_id: number;
+export class ExpenseCreate {
     private category: Category;
     private amount: number;
     private date: Date;
@@ -11,37 +9,17 @@ export class Expense {
     private paymentMethod: PaymentMethod;
 
     constructor(
-        id: number,
-        user_id: number,
         category: any,
         amount: number,
         date: Date,
         comment: string,
         paymentMethod: any
     ) {
-        this.id = id;
-        this.user_id = user_id;
         this.category = category;
         this.amount = amount;
         this.date = date;
         this.comment = comment;
         this.paymentMethod = paymentMethod;
-    }
-
-    get getId(): number {
-        return this.id;
-    }
-
-    setId(id: number): void {
-        this.id = id;
-    }
-
-    get getUserId(): number {
-        return this.user_id;
-    }
-
-    setUserId(user_id: number): void {
-        this.user_id = user_id;
     }
 
     get getCategory(): Category {
