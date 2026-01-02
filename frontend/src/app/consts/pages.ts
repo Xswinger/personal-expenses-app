@@ -1,5 +1,5 @@
 export const PAGES_URL = {
-    REGISTER: '/register',
+    REGISTER: '/registration',
     HOME: '/home',
     MAIN: '/users',
 };

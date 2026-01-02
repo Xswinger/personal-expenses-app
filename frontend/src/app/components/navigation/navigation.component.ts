@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { PAGES_NAME, PAGES_URL } from '../consts/pages';
 import { RouterLink } from "@angular/router";
+import { PAGES_NAME, PAGES_URL } from '../../consts/pages';
 
 @Component({
     selector: 'app-nav',

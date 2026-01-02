@@ -9,6 +9,7 @@ import { ExpenseCreate } from "../models/expense/ExpenseCreate";
 import { UserMonthlySummary } from "../models/UserMonthlySummary";
 import { Category } from "../models/Category";
 import { PaymentMethod } from "../models/PaymentMethod";
+import { MonthlyStatictics } from "../models/MonthlyStatistics";
 
 @Injectable({ providedIn: 'root' })
 export class StubService {
@@ -38,7 +39,9 @@ export class StubService {
     }
 
     getUser(id: number): Observable<any> {
-        return this.http.get(`${API_URL.USERS}/${id}/`)
+        return of(
+            new User(1, 'xswinger', 'xswinger@mail.ru')
+        )
     }
 
     updateUser(user: User): Observable<any> {
@@ -98,7 +101,15 @@ export class StubService {
         return this.http.delete(`${API_URL.USERS}/${id}/`);
     }
 
-    getMontlyStatistic(): Observable<UserMonthlySummary[]> {
+    getMontlyStatistic(): Observable<MonthlyStatictics> {
+        return of(
+            new MonthlyStatictics(
+                'may', 1000
+            )
+        );
+    }
+
+    getDashboard(): Observable<UserMonthlySummary[]> {
         return of([
             new UserMonthlySummary(
                 1, 'xswinger', 100
@@ -107,10 +118,6 @@ export class StubService {
                 1, 'turis', 200
             ) 
         ]);
-    }
-
-    getDashboard(): Observable<any> {
-        return this.http.get(API_URL.GET_DASHBOARD);
     }
 
 }

@@ -11,9 +11,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of summary">
-        <td>{{ user.username }}</td>
-        <td>{{ user.total_expenses_last_month | currency:'RUB':'symbol' }}</td>
+      <tr *ngFor="let summary of summaries">
+        <td>{{ summary.getUsername }}</td>
+        <td>{{ summary.getTotalExpensesLastMonth | currency:'RUB':'symbol' }}</td>
       </tr>
 
       <tr *ngIf="users.length === 0">

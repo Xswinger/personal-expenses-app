@@ -1,7 +1,7 @@
 export enum Category {
-    FOOD,
-    VEHICLE, 
-    RESTAURANT,
-    ENTARTAINMENT,
-    OTHER
+    FOOD = 'Еда',
+    VEHICLE = 'Техника', 
+    RESTAURANT = 'Рестораны',
+    ENTARTAINMENT = 'Развлечения',
+    OTHER = 'Другое'
 }

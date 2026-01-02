@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { API_URL } from "../consts/api";
 import { User } from "../models/user/User";
 import { UserCreate } from "../models/user/UserCreate";
@@ -25,7 +25,8 @@ export class ApiService {
     }
 
     getUsers(): Observable<User[]> {
-        return this.http.get(API_URL.USERS);
+        // return this.http.get(API_URL.USERS);
+        return of([]);
     }
 
     addUser(userCreate: UserCreate): Observable<any> {
@@ -45,7 +46,8 @@ export class ApiService {
     }
 
     getExpenses(): Observable<Expense[]> {
-        return this.http.get(API_URL.EXPENSES)
+        // return this.http.get(API_URL.EXPENSES)
+        return of([]);
     }
 
     addExpense(expense: ExpenseCreate): Observable<any> {
@@ -64,8 +66,10 @@ export class ApiService {
         return this.http.delete(`${API_URL.USERS}/${id}/`);
     }
 
+    // fix
     getMontlyStatistic(): Observable<UserMonthlySummary[]> {
-        return this.http.get(API_URL.GET_MONTHLY_STATISTIC);
+        // return this.http.get(API_URL.GET_MONTHLY_STATISTIC);
+        return of([]);
     }
 
     getDashboard() {
